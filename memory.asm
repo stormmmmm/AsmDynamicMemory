@@ -54,7 +54,7 @@ malloc      proc
             jmp         short equal_2
             endcmp:
             pop         cx
-            MALLOC_ID   = MALLOC_ID + 5
+            MALLOC_ID   = MALLOC_ID + 6
             popstack
             ret         2
             
