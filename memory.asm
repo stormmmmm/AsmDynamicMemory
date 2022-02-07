@@ -77,12 +77,45 @@ malloc      proc
             __setname   %MALLOC_ID+5, dt, ?
             jmp         short endcmp
             
-            endp
+endp
+
+callocs     proc   
+            param       elsize, 1
+            param       tablesize, 0
+            movstack
+            push        ax
+            push        bx
+            push        cx 
+            push        dx
+            push        si
+            mov         bx, elsize
+            mov         dx, tablesize
+            xor         cx, cx
+            mov         si, di
+            cloop:
+                push    bx
+                call    mallocs
+                mov     [si], ax
+                inc     cx
+                cmp     cx, dx
+                jng     cloop
+                add     si, 2
+            pop         si
+            pop         dx
+            pop         cx
+            pop         bx
+            pop         ax
+            popstack
+            ret         4
+endp
 
 start:
     ; выделить 2 байта:
     push    2
     call    malloc
+    ; callocs работает похожим образом, но выделяет неограниченное количество памяти. 
+    ; аргументы: размер одного элемента, количество элементов. 
+    ; адреса находятся в ds:[di]
     ; и самое главное - не нужна функция освобождения памяти, ибо все реализовано на основе стека!
 .data
 
